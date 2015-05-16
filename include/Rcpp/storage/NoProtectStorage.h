@@ -38,7 +38,7 @@ namespace Rcpp{
         }
 
         inline bool inherits(const char* clazz) const {
-            return ::Rf_inherits( data, clazz) ;
+            return ::Rf_inherits( data, clazz) !=0;
         }
 
         inline operator SEXP() const {

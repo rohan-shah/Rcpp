@@ -46,7 +46,7 @@ namespace internal{
             }
             SEXP dimnames = Rf_getAttrib(data_, R_DimNamesSymbol);
             SEXP dims = Rf_getAttrib(data_, R_DimSymbol);
-            if (Rf_isNull(dimnames)) {
+            if (Rf_isNull(dimnames)!=0) {
                 Shield<SEXP> new_dimnames(Rf_allocVector(VECSXP, Rf_length(dims)));
                 SET_VECTOR_ELT(new_dimnames, dim_, other);
                 Rf_setAttrib(data_, R_DimNamesSymbol, new_dimnames);
@@ -64,7 +64,7 @@ namespace internal{
         template <typename T>
         inline operator T() const {
             SEXP dimnames = Rf_getAttrib(data_, R_DimNamesSymbol);
-            if (Rf_isNull(dimnames)) {
+            if (Rf_isNull(dimnames)!=0) {
                 return T();
             } else {
                 return T(VECTOR_ELT(dimnames, dim_));

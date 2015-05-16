@@ -22,6 +22,11 @@
 #ifndef Rcpp_Module_Property_h
 #define Rcpp_Module_Property_h
 
+#ifdef _MSC_VER
+    #define RANGE_ERROR_NOT_COMPATIBLE
+#else
+    #define RANGE_ERROR_NOT_COMPATIBLE throw(std::range_error,Rcpp::not_compatible)
+#endif
 // getter through a member function
 template <typename Class, typename PROP>
 class CppProperty_GetMethod : public CppProperty<Class> {
@@ -100,7 +105,7 @@ public:
     SEXP get(Class* object) {
         return Rcpp::wrap( (object->*getter)() ) ;
     }
-    void set(Class* object, SEXP value) throw(std::range_error,Rcpp::not_compatible){
+    void set(Class* object, SEXP value) RANGE_ERROR_NOT_COMPATIBLE{
         (object->*setter)(
                           Rcpp::as< typename Rcpp::traits::remove_const_and_reference< PROP >::type >( value )
                            ) ;
@@ -158,7 +163,7 @@ public:
     SEXP get(Class* object) {
         return Rcpp::wrap( (object->*getter)() ) ;
     }
-    void set(Class* object, SEXP value) throw(std::range_error,Rcpp::not_compatible){
+    void set(Class* object, SEXP value) RANGE_ERROR_NOT_COMPATIBLE{
         setter( object,
                 Rcpp::as< typename Rcpp::traits::remove_const_and_reference< PROP >::type >( value )
                 ) ;

@@ -25,7 +25,7 @@ namespace Rcpp{
     public:
 
         inline bool isNULL() const{
-            return Rf_isNull( static_cast<const Class&>(*this) ) ;
+            return Rf_isNull( static_cast<const Class&>(*this) )!=0 ;
         }
 
         inline int sexp_type() const {
@@ -33,11 +33,11 @@ namespace Rcpp{
         }
 
         inline bool isObject() const {
-            return Rf_isObject( static_cast<const Class&>(*this) ) ;
+            return Rf_isObject( static_cast<const Class&>(*this) )!=0 ;
         }
 
         inline bool isS4() const {
-            return Rf_isS4( static_cast<const Class&>(*this) ) ;
+            return Rf_isS4( static_cast<const Class&>(*this) ) !=0;
         }
 
     } ;

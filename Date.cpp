@@ -101,7 +101,12 @@ namespace Rcpp {
 #include "fcntl.h"
 #include "float.h"	/* for FLT_MAX and DBL_MAX */
 
-#include <unistd.h>		// solaris needs this for read() and close()
+#ifdef _MSC_VER
+#include <stdint.h>
+#include <io.h>
+#else
+#include <unistd.h>	// solaris needs this for read() and close() 	#include <unistd.h>	// solaris needs this for read() and close()
+#endif
 
 
 /* merged from private.h */

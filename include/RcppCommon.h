@@ -94,9 +94,9 @@ namespace Rcpp {
     }
 
     inline SEXP Rcpp_ReplaceObject(SEXP x, SEXP y) {
-        if (Rf_isNull(x)) {
+        if (Rf_isNull(x)!=0) {
             Rcpp_PreserveObject(y);
-        } else if (Rf_isNull(y)) {
+        } else if (Rf_isNull(y)!=0) {
             Rcpp_ReleaseObject(x);
         } else {
             // if we are setting to the same SEXP as we already have, do nothing

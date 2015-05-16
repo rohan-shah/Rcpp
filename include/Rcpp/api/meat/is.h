@@ -112,11 +112,11 @@ namespace Rcpp {
         return TYPEOF(x) == SYMSXP;
     }
     template <> inline bool is__simple<S4>(SEXP x) {
-        return ::Rf_isS4(x);
+        return ::Rf_isS4(x)!=0;
     }
     template <> inline bool is__simple<Reference>(SEXP x) {
         if( ! ::Rf_isS4(x) ) return false;
-        return ::Rf_inherits(x, "envRefClass" );
+        return ::Rf_inherits(x, "envRefClass" )!=0;
     }
     template <> inline bool is__simple<Promise>(SEXP x) {
         return TYPEOF(x) == PROMSXP;

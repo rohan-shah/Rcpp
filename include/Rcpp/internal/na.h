@@ -77,7 +77,7 @@ inline bool Rcpp_IsNA(double x) {
 }
 
 inline bool Rcpp_IsNaN(double x) {
-    return R_IsNaN(x);
+    return R_IsNaN(x)!=0;
 }
 
 #else
@@ -85,11 +85,11 @@ inline bool Rcpp_IsNaN(double x) {
 // fallback when we don't have unsigned long long
 
 inline bool Rcpp_IsNA(double x) {
-    return R_IsNA(x);
+    return R_IsNA(x)!=0;
 }
 
 inline bool Rcpp_IsNaN(double x) {
-    return R_IsNaN(x);
+    return R_IsNaN(x)!=0;
 }
 
 #endif

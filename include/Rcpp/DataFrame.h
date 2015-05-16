@@ -76,7 +76,7 @@ namespace Rcpp{
                 }
                 att = CDR(att) ;
             }
-            if (Rf_isNull(rn))
+            if (Rf_isNull(rn)!=0)
                 return 0;
             if (TYPEOF(rn) == INTSXP && LENGTH(rn) == 2 && INTEGER(rn)[0] == NA_INTEGER)
                 return abs(INTEGER(rn)[1]);
@@ -91,7 +91,7 @@ namespace Rcpp{
 
     private:
         void set__(SEXP x){
-            if( ::Rf_inherits( x, "data.frame" )){
+            if( ::Rf_inherits( x, "data.frame" )!=0){
                 Parent::set__( x ) ;
             } else{
                 SEXP y = internal::convert_using_rfunction( x, "as.data.frame" ) ;
