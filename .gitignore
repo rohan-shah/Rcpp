@@ -1,12 +1,1 @@
-inst/lib
-.Rproj.user
-src/*.o
-src/*.so
-src/*.dll
-.Rhistory
-
-## QtCreator
-Rcpp.pro
-Rcpp.pro.user
-*.autosave
-.#*
+/build/
