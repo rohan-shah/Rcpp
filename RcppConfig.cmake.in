@@ -1,7 +1,29 @@
-cmake_minimum_required(VERSION 3.1)
-set(Rcpp_INCLUDE_DIRS @PROJECT_SOURCE_DIR@/include)
+# Create imported target Rcpp
+add_library(Rcpp STATIC IMPORTED)
+
+set_property(TARGET Rcpp PROPERTY
+  INTERFACE_INCLUDE_DIRECTORIES "@PROJECT_SOURCE_DIR@/include"
+)
+set_property(TARGET Rcpp APPEND PROPERTY
+  INTERFACE_INCLUDE_DIRECTORIES "@R_INCLUDE_DIR@"
+)
+set_property(TARGET Rcpp APPEND PROPERTY
+  INTERFACE_INCLUDE_DIRECTORIES "@PROJECT_SOURCE_DIR@"
+)
 if(WIN32)
-	set(residualConnectivity_LIBRARY_DIR @PROJECT_SOURCE_DIR@/x64/)
+  # Import target "Rcpp" for configuration "Debug"
+  set_property(TARGET Rcpp APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+  set_target_properties(Rcpp PROPERTIES
+    IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
+    IMPORTED_LOCATION_DEBUG "@PROJECT_BINARY_DIR@/Debug/Rcpp.lib"
+    )
+
+  # Import target "Rcpp" for configuration "Release"
+  set_property(TARGET Rcpp APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+  set_target_properties(Rcpp PROPERTIES
+    IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
+    IMPORTED_LOCATION_RELEASE "@PROJECT_BINARY_DIR@/Release/Rcpp.lib"
+    )
 else()
-	set(Rcpp_LIBRARIES @RCPP_LIBRARY@)
+  set_target_property(TARGET Rcpp PROPERTY IMPORTED_LOCATION "@PROJECT_BINARY_DIR@")
 endif()

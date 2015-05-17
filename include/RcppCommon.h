@@ -125,7 +125,11 @@ namespace Rcpp {
 #include <Rcpp/complex.h>
 #include <Rcpp/barrier.h>
 
-#define RcppExport extern "C"
+#ifdef _MSC_VER
+    #define RcppExport extern "C" __declspec(dllexport)
+#else
+    #define RcppExport extern "C"
+#endif
 
 #include <Rcpp/exceptions.h>
 

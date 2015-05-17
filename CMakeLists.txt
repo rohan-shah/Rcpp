@@ -12,7 +12,6 @@ set_property(TARGET Rcpp PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 find_package(R REQUIRED)
 
-set(RCPP_LIBRARY $<TARGET_FILE:Rcpp>)
 configure_file(${PROJECT_SOURCE_DIR}/RcppConfig.cmake.in ${PROJECT_BINARY_DIR}/RcppConfig.cmake @ONLY)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	#Add a define to account for different name of certain function
