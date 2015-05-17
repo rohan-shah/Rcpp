@@ -1,11 +1,13 @@
 ##Cross-Platform Rcpp
 
 This is a severely cut-down version of Rcpp, which excludes almost all the R code. The purpose of this is
+
 1. This version can be compiled as a static library.
 2. This version comes with cmake build files.
 3. This version compiles with Visual Studio on Windows. 
 
 Although it was always possible to compile R extensions using Visual Studio, this was extremely unpleasant without access to Rcpp. And it is sometimes necessary to use Visual Studio on Windows because
+
 1. The default toolchain on Windows is *bad*. Espceially the debugger, which is unable to even give a stack trace in most cases.
 2. Some libraries (Qt, Intels MKL) only work with Visual Studio on Windows, or the work necessary to recompile them is huge. 
 
@@ -13,7 +15,19 @@ Example packages where it was necessary or desirable to use Visual Studio are mp
 In the case of mpMapInteractive we use the Qt package, which is extremely complicated. It's hard to debug such a complicated package on Windows without access to a decent compiler / debugger.
 In the case of residualConnectivity, this is a Monte Carlo package and performance is important. It also incorporates multithreading andthe Qt library. 
 
-##Compiling this package on windows
+##General Use
+
+For an example of the general package lay-out required to link against this static library, see package mpMapInteractive on github. Any R package compiled using this static library must
+
+1. Define a variable 'extern "C" char* package_name'. 
+2. Include the R file Rcpp_exceptions.R
+3. Call R_init_Rcpp from the R_init_* function of your shared library. 
+
+##Windows 
+
+On windows the src/Makefile.in is converted by CMake to a file src/Makefile.win, which redirects the package build command to the binary directory.
+
+###Compiling this package on windows
 
 1. Choose a binary directory (I use <RcppRoot>/build but anything will do).
 2. Run the cmake gui. 
@@ -22,8 +36,7 @@ In the case of residualConnectivity, this is a Monte Carlo package and performan
 5. When configuring succeeds, hit generate. 
 6. Open <RcppRoot>/build/Rcpp.sln and compile debug and release versions. 
 
-##Using this package on windows
-This assumes that you have a standard R package, but the src/ directory has a CMakeLists.txt file. You should also have a src/Makefile.in, which is converted by cmake to a src/Makefile.win. The point of this is that Makefile.win should redirect the package compilation command to being "nmake build/Makefile". For an example of this set-up, see package mpMapInteractive on github. You must ensure that you call R_init_Rcpp from the R_init_* function of your package, and you must have a copy of the file Rcpp_exceptions.h in your package. 
+###Linking against this package on windows
 
 1. Run the cmake gui FROM A VISUAL STUDIO TOOLS COMMAND PROMPT. 
 2. Add variable Rcpp_DIR with value "<RcppRoot>/build"
