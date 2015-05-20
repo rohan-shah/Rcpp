@@ -25,5 +25,5 @@ if(WIN32)
     IMPORTED_LOCATION_RELEASE "@PROJECT_BINARY_DIR@/Release/Rcpp.lib"
     )
 else()
-  set_target_property(TARGET Rcpp PROPERTY IMPORTED_LOCATION "@PROJECT_BINARY_DIR@")
+  set_target_properties(Rcpp PROPERTIES IMPORTED_LOCATION "@RCPP_LIB_FILE@")
 endif()

@@ -88,7 +88,7 @@ static SEXP Rcpp_cache = R_NilValue;
 #define RCPP_HASH_CACHE_INITIAL_SIZE 1024
 #endif
 
-extern "C" char* package_name;
+extern "C" const char* package_name;
 // only used for debugging
 SEXP get_rcpp_cache() {
     if (! Rcpp_cache_know) {
