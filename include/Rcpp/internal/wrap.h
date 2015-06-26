@@ -115,7 +115,7 @@ inline SEXP primitive_range_wrap__impl__nocast( InputIterator first, InputIterat
 	Shield<SEXP> x( Rf_allocVector( RTYPE, size ) );
 
 	typedef typename ::Rcpp::traits::storage_type<RTYPE>::type STORAGE ;
-	int __trip_count = size >> 2 ;
+	int __trip_count = (int)size >> 2 ;
 	STORAGE* start = r_vector_start<RTYPE>(x) ;
 	int i = 0 ;
 	for ( ; __trip_count > 0 ; --__trip_count) {
@@ -143,7 +143,7 @@ template <typename InputIterator, typename T>
 inline SEXP primitive_range_wrap__impl__nocast( InputIterator first, InputIterator last, std::input_iterator_tag ){
 	size_t size = std::distance( first, last ) ;
 	const int RTYPE = ::Rcpp::traits::r_sexptype_traits<T>::rtype ;
-	Shield<SEXP> x( Rf_allocVector( RTYPE, size ) );
+	Shield<SEXP> x( Rf_allocVector( RTYPE, (int)size ) );
 	std::copy( first, last, r_vector_start<RTYPE>(x) ) ;
 	return wrap_extra_steps<T>( x ) ;
 }

@@ -54,10 +54,10 @@ namespace Rcpp {
         /* safety check for unbounded loops */
         if (year0 > 3000) {
             excess = (int)(year0/2000) - 1;
-            year0 -= excess * 2000;
+            year0 -= (int)(excess * 2000);
         } else if (year0 < 0) {
             excess = -1 - (int)(-year0/2000);
-            year0 -= excess * 2000;
+            year0 -= (int)(excess * 2000);
         }
 
         for(i = 0; i < tm.tm_mon; i++) day += days_in_month[i];
@@ -1198,7 +1198,7 @@ struct tzhead {
 	{
 	    long seconds;
 
-	    seconds = tdays * SECSPERDAY + 0.5;
+	    seconds = (long)(tdays * SECSPERDAY + 0.5);
 	    tdays = seconds / SECSPERDAY;
 	    rem += seconds - tdays * SECSPERDAY;
 	}

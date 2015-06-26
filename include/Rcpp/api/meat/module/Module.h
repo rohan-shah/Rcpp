@@ -23,7 +23,7 @@
 namespace Rcpp {
 
     inline List Module::classes_info(){
-	    int n = classes.size() ;
+	    int n = (int)classes.size() ;
 	    CharacterVector names(n) ;
 	    List info(n);
 	    CLASS_MAP::iterator it = classes.begin() ;

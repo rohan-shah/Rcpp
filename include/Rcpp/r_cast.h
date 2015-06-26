@@ -32,7 +32,7 @@ namespace Rcpp{
             try{
                 SEXP funSym = Rf_install(fun);
                 res = Rcpp_eval( Rf_lang2( funSym, x ) ) ;
-            } catch( eval_error& e){
+            } catch( eval_error&){
                 throw not_compatible( std::string("could not convert using R function : ") + fun  ) ;
             }
             return res;

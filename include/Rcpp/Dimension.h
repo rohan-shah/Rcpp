@@ -39,14 +39,14 @@ namespace Rcpp{
 	            dims = other.dims ;
 	        return *this ;
 	    }
-	    Dimension(const size_t& n1) : dims(1){
+	    Dimension(const int& n1) : dims(1){
 	        dims[0] = n1 ;
 	    }
-	    Dimension(const size_t& n1, const size_t& n2) : dims(2){
+	    Dimension(const int& n1, const int& n2) : dims(2){
 	        dims[0] = n1 ;
 	        dims[1] = n2 ;
 	    }
-	    Dimension(const size_t& n1, const size_t& n2, const size_t& n3) : dims(3){
+	    Dimension(const int& n1, const int& n2, const int& n3) : dims(3){
 	        dims[0] = n1 ;
 	        dims[1] = n2 ;
 	        dims[2] = n3 ;

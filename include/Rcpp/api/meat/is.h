@@ -103,7 +103,7 @@ namespace Rcpp {
 
     template <> inline bool is__simple<DataFrame>(SEXP x) {
         if( TYPEOF(x) != VECSXP ) return false;
-        return Rf_inherits( x, "data.frame" );
+        return Rf_inherits( x, "data.frame" )!=0;
     }
     template <> inline bool is__simple<WeakReference>(SEXP x) {
         return TYPEOF(x) == WEAKREFSXP;
@@ -132,7 +132,7 @@ namespace Rcpp {
     }
     template <> inline bool is__simple<Formula>(SEXP x) {
         if( TYPEOF(x) != LANGSXP ) return false;
-        return Rf_inherits(x, "formula");
+        return Rf_inherits(x, "formula")!=0;
     }
 
     template <> inline bool is__simple<Date>(SEXP x) {

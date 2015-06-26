@@ -39,7 +39,7 @@ namespace Rcpp{
             try {
                 Shield<SEXP> res( Rcpp_eval( Rf_lang2( asEnvironmentSym, x ) ) );
                 return res ;
-            } catch( const eval_error& ex){
+            } catch( const eval_error&){
                 throw not_compatible( "cannot convert to environment"  ) ;
             }
         }

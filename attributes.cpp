@@ -1462,9 +1462,9 @@ namespace attributes {
 
         // Look for the next {
         std::string signature;
-        for (int i = lineNumber; i<lines_.size(); i++) {
+        for (std::size_t i = lineNumber; i<lines_.size(); i++) {
             std::string line;
-            line = lines_[i];
+            line = lines_[(int)i];
             std::string::size_type end = line.find_first_of("{;");
             if (end == std::string::npos) {
                 signature.append(line);
@@ -3245,7 +3245,7 @@ BEGIN_RCPP
                                                       packageName,
                                                       fileSep));
     }
-    catch(const Rcpp::file_exists& e) {}
+    catch(const Rcpp::file_exists&) {}
 
     // write begin
     generators.writeBegin();

@@ -36,7 +36,7 @@
 #ifndef VOID_END_RCPP
 #define VOID_END_RCPP                                                                            \
     }                                                                                            \
-    catch( Rcpp::internal::InterruptedException &__ex__) {                                       \
+    catch( Rcpp::internal::InterruptedException &) {                                       \
         rcpp_output_type = 1 ;                                                                   \
     }                                                                                            \
     catch( std::exception& __ex__ ){                                                             \

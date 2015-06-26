@@ -71,7 +71,7 @@ namespace Rcpp {
          * vector of arity of all the functions exported by the module
          */
         IntegerVector functions_arity(){
-	        int n = functions.size() ;
+	        int n = (int)functions.size() ;
 	        IntegerVector x( n ) ;
 	        CharacterVector names( n );
 	        MAP::iterator it = functions.begin() ;
@@ -87,7 +87,7 @@ namespace Rcpp {
          * vector of names of the functions
          */
         CharacterVector functions_names(){
-	        int n = functions.size() ;
+	        int n = (int)functions.size() ;
 	        CharacterVector names( n );
 	        MAP::iterator it = functions.begin() ;
 	        for( int i=0; i<n; i++, ++it){
@@ -100,7 +100,7 @@ namespace Rcpp {
          * exposed class names
          */
         inline CharacterVector class_names(){
-            int n = classes.size() ;
+            int n = (int)classes.size() ;
             CharacterVector names( n );
             CLASS_MAP::iterator it = classes.begin() ;
             for( int i=0; i<n; i++, ++it){
@@ -118,8 +118,8 @@ namespace Rcpp {
          * completion information
          */
         CharacterVector complete(){
-            int nf = functions.size() ;
-            int nc = classes.size() ;
+            int nf = (int)functions.size() ;
+            int nc = (int)classes.size() ;
             int n = nf + nc ;
             CharacterVector res( n ) ;
             int i=0;
@@ -154,7 +154,7 @@ namespace Rcpp {
          */
         inline SEXP get_function( const std::string& name_ ){
             MAP::iterator it = functions.begin() ;
-            int n = functions.size() ;
+            int n = (int)functions.size() ;
             CppFunction* fun = 0 ;
             for( int i=0; i<n; i++, ++it){
                 if( name_.compare( it->first ) == 0){
@@ -179,7 +179,7 @@ namespace Rcpp {
          */
         inline DL_FUNC get_function_ptr( const std::string& name_ ){
 	        MAP::iterator it = functions.begin() ;
-	        int n = functions.size() ;
+	        int n = (int)functions.size() ;
 	        CppFunction* fun = 0 ;
 	        for( int i=0; i<n; i++, ++it){
 	            if( name_.compare( it->first ) == 0){
