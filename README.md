@@ -17,7 +17,7 @@ In the case of residualConnectivity, this is a Monte Carlo package and performan
 
 ##General Use
 
-For an example of the general package lay-out required to link against this static library, see package mpMapInteractive on github. Any R package compiled using this static library must
+Any R package compiled using this static library must
 
 1. Define a variable 'extern "C" char* package_name'. 
 2. Include the R file Rcpp_exceptions.R
@@ -25,23 +25,26 @@ For an example of the general package lay-out required to link against this stat
 
 ##Windows 
 
-On windows the src/Makefile.in is converted by CMake to a file src/Makefile.win, which redirects the package build command to the binary directory.
+On windows the CMake build scripts are only designed to build a 64-bit version of this package. Supported outputs are Visual Studio solution files and NMake. 
 
 ###Compiling this package on windows
 
-1. Choose a binary directory (I use <RcppRoot>/build but anything will do).
+1. Choose a binary directory (E.g. <RcppRoot>/build).
 2. Run the cmake gui. 
-3. Enter source code directory "<RcppRoot>" and binaries directory "<RcppRoot>/build". 
-4. Hit Configure and choose a 64-bit Visual Studio project. Cmake must be able to find R.exe. If it can't you need to add a directory to your PATH and restart the cmake gui. 
-5. When configuring succeeds, hit generate. 
-6. Open <RcppRoot>/build/Rcpp.sln and compile debug and release versions. 
+3. Enter source code directory "<RcppRoot>" and binaries directory (E.g.<RcppRoot>/build). 
+4. Set R_COMMAND to <R_HOME>/bin/x64/R.exe. Ensure that you choose the 64-bit version. 
+5. Hit Configure and when prompted choose a Visual Studio 64-bit output, or NMake. 
+6. When configuring succeeds, hit generate. 
+
+###Compiling using Visual Studio
+
+Under visual studio the configuration scripts generate an import library for R.dll. This means that the scripts must be able to run cl.exe and lib.exe. If this step fails, check that cl.exe and lib.exe can run. If not, you may need to set up the correct environment for the compiler (by running a script such as vcvarsx86_amd64.bat) before running cmake.
 
 ###Linking against this package on windows
 
-1. Run the cmake gui FROM A VISUAL STUDIO TOOLS COMMAND PROMPT. 
-2. Add variable Rcpp_DIR with value "<RcppRoot>/build"
-3. Hit Configure and choose NMake makefiles. 
-4. You can now build the binary parts of the package by either running nmake from "<PackageRoot>/src/build" or by running "R CMD INSTALL <PackageRoot>". 
+1. Run the cmake gui.
+2. Add variable Rcpp_DIR and enter the value for the Rcpp binary directory (E.g. <RcppRoot>/build)
+3. Hit Configure and choose a Visual Studio 64-bit output, or NMake. 
 
 ##Credit
 
