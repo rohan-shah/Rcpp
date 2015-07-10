@@ -34,8 +34,8 @@ On windows the CMake build scripts are only designed to build a 64-bit version o
 3. Enter source code directory "<RcppRoot>" and binaries directory (E.g.<RcppRoot>/build). 
 4. Set R_COMMAND to <R_HOME>/bin/x64/R.exe. Ensure that you choose the 64-bit version. 
 5. If the output is going to be NMake Makefiles, set CMAKE_BUILD_TYPE appropriately (E.g. as either Release or Debug)
-5. Hit Configure and when prompted choose a Visual Studio 64-bit output, or NMake Makefiles.
-6. When configuring succeeds, hit generate. 
+6. Hit Configure and when prompted choose a Visual Studio 64-bit output, or NMake Makefiles.
+7. When configuring succeeds, hit generate. 
 
 The configuration scripts generate an import library for R.dll. This means that the scripts must be able to run cl.exe and lib.exe. If this step fails, check that cl.exe and lib.exe can run. If not, you may need to set up the correct environment for the compiler (by running a script such as vcvarsx86_amd64.bat) before running cmake.
 
@@ -44,6 +44,22 @@ The configuration scripts generate an import library for R.dll. This means that 
 1. Run the cmake gui.
 2. Add variable Rcpp_DIR and enter the value for the Rcpp binary directory (E.g. <RcppRoot>/build)
 3. Hit Configure and choose a Visual Studio 64-bit output, or NMake Makefiles. 
+
+##Linux
+
+###Compiling this package on Linux
+
+1. Choose a binary directory (E.g. <RcppRoot>/build).
+2. Change directory to the binary directory.
+3. Run cmake <RcppRoot>. The configure script will attempt to locate R by itself. If it cannot be found, specifying the variable R_COMMAND (the command that runs R) by adding -DR_COMMAND=<..> to the cmake command. 
+
+###Linking against this package on Linux
+
+Add -DRcpp_DIR=<...> followed by the binary directory to your call to cmake. 
+
+##OS X
+
+Compilation on OS X is untested. 
 
 ##Credit
 
