@@ -16,7 +16,7 @@
 # along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
 .rcpp_error_recorder <- function(e){  
-    invisible( .Call( rcpp_error_recorder, e ) )
+    invisible( .Call( "rcpp_error_recorder", e ) )
 }
 
 .warningsEnv <- new.env()
