@@ -18,6 +18,10 @@ if(WIN32)
       IMPORTED_LINK_INTERFACE_LANGUAGES_${UPPER_BUILD_TYPE} "CXX"
       IMPORTED_LOCATION_${UPPER_BUILD_TYPE} "@PROJECT_BINARY_DIR@/Rcpp.lib"
       )
+    set_target_properties(Rcpp PROPERTIES
+      IMPORTED_LINK_INTERFACE_LANGUAGES "CXX"
+      IMPORTED_LOCATION "@PROJECT_BINARY_DIR@/Rcpp.lib"
+      )
   else()
     set(BUILD_TYPES @CMAKE_CONFIGURATION_TYPES@)
     foreach(BUILD_TYPE ${BUILD_TYPES})
@@ -28,7 +32,7 @@ if(WIN32)
         IMPORTED_LOCATION_${UPPER_BUILD_TYPE} "@PROJECT_BINARY_DIR@/${BUILD_TYPE}/Rcpp.lib"
         )
     endforeach()
-  foreach()
+  endif()
 else()
   set_target_properties(Rcpp PROPERTIES IMPORTED_LOCATION "@RCPP_LIB_FILE@")
 endif()
