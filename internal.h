@@ -138,6 +138,7 @@ EXTFUN(class__newInstance);
 EXTFUN(class__dummyInstance);
 
 void init_Rcpp_routines(DllInfo*);
+R_CallMethodDef* Rcpp_get_call();
 
 #undef CALLFUN_0
 #undef CALLFUN_1
