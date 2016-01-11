@@ -33,7 +33,7 @@ namespace internal{
 			const_generic_proxy( const const_generic_proxy& other ) :
 				parent(other.parent), index(other.index){} ;
 
-			const_generic_proxy( const VECTOR& v, int i ) : parent(&v), index(i){} ;
+			const_generic_proxy( const VECTOR& v, R_xlen_t i ) : parent(&v), index(i){} ;
 
 			operator SEXP() const {
 			    return get() ;
@@ -47,8 +47,10 @@ namespace internal{
 			operator bool() const { return ::Rcpp::as<bool>(get()) ; }
 			operator int() const { return ::Rcpp::as<int>(get()) ; }
 
+			inline void move(R_xlen_t n) { index += n ; }
+			
 			const VECTOR* parent;
-			int index ;
+			R_xlen_t index ;
 
 		private:
 

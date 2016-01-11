@@ -343,6 +343,12 @@ namespace attributes {
                 return function().name();
             }
         }
+        
+        std::string exportedCppName() const {
+            std::string name = exportedName();
+            std::replace(name.begin(), name.end(), '.', '_');
+            return name;
+        }
 
         bool rng() const {
             Param rngParam = paramNamed(kExportRng);
@@ -1434,6 +1440,13 @@ namespace attributes {
             // check for name
             std::string name;
             if (pos != std::string::npos) {
+                // insert whitespace if variables are joint with '&' 
+                std::string::size_type ref_pos = arg.substr(pos).find_last_of("&");
+                if (ref_pos != std::string::npos) {
+                    pos += ref_pos + 1;
+                    arg.insert(pos, " ");
+                }
+
                 name = arg.substr(pos);
                 trimWhitespace(&name);
             }
@@ -1460,19 +1473,34 @@ namespace attributes {
     // Parse the text of a function signature from the specified line
     std::string SourceFileAttributesParser::parseSignature(size_t lineNumber) {
 
-        // Look for the next {
+        // Look for the signature termination ({ or ; not inside quotes)
+        // on this line and then subsequent lines if necessary
         std::string signature;
         for (std::size_t i = lineNumber; i<lines_.size(); i++) {
             std::string line;
-            line = lines_[(int)i];
-            std::string::size_type end = line.find_first_of("{;");
-            if (end == std::string::npos) {
-                signature.append(line);
-                signature.push_back(' ');
-            } else {
-                signature.append(line.substr(0, end));
-                return signature;
+            line = lines_[i];
+            bool insideQuotes = false;
+            char prevChar = 0;
+            // scan for { or ; not inside quotes
+            for (size_t c = 0; c < line.length(); ++c) {
+                // alias character
+                char ch = line.at(c);  
+                // update quotes state
+                if (ch == '"' && prevChar != '\\')
+                    insideQuotes = !insideQuotes;
+                // found signature termination, append and return
+                if (!insideQuotes && ((ch == '{') || (ch == ';'))) {
+                    signature.append(line.substr(0, c));
+                    return signature;
+                }
+                // record prev char (used to check for escaped quote i.e. \")
+                prevChar = ch;
             }
+            
+            // if we didn't find a terminator on this line then just append the line
+            // and move on to the next line
+            signature.append(line);
+            signature.push_back(' ');
         }
 
         // Not found
@@ -1780,7 +1808,7 @@ namespace attributes {
                        it = attributes.begin(); it != attributes.end(); ++it) {
                 if (it->isExportedFunction()) {
                     // add it to the list if it's not hidden
-                    Function fun = it->function().renamedTo(it->exportedName());
+                    Function fun = it->function().renamedTo(it->exportedCppName());
                     if (!fun.isHidden())
                         cppExports_.push_back(*it);
                 }
@@ -1963,7 +1991,7 @@ namespace attributes {
             if (it->isExportedFunction()) {
 
                 Function function =
-                    it->function().renamedTo(it->exportedName());
+                    it->function().renamedTo(it->exportedCppName());
 
                 // if it's hidden then don't generate a C++ interface
                 if (function.isHidden())
@@ -2020,9 +2048,11 @@ namespace attributes {
                        << "            throw Rcpp::exception(as<std::string>("
                        << "__result).c_str());"
                        << std::endl;
-                ostr() << "        return Rcpp::as<" << function.type() << " >"
-                       << "(__result);" << std::endl;
-
+                if (!function.type().isVoid()) {
+                    ostr() << "        return Rcpp::as<" << function.type() << " >"
+                           << "(__result);" << std::endl;
+                }
+                
                 ostr() << "    }" << std::endl << std::endl;
             }
         }
@@ -2813,7 +2843,7 @@ namespace {
             dircreate(buildDirectory_);
 
             // generate a random context id
-            contextId_ = "sourceCpp_" + createRandomizer();
+            contextId_ = "sourceCpp_" + uniqueToken();
 
             // regenerate the source code
             regenerateSource();
@@ -2847,7 +2877,7 @@ namespace {
 
             // create new dynlib filename
             previousDynlibFilename_ = dynlibFilename_;
-            dynlibFilename_ = "sourceCpp_" + createRandomizer() + dynlibExt_;
+            dynlibFilename_ = "sourceCpp_" + uniqueToken() + dynlibExt_;
 
             // copy the source file to the build dir
             Rcpp::Function filecopy = Rcpp::Environment::base_env()["file.copy"];
@@ -3037,10 +3067,9 @@ namespace {
 
         }
 
-        std::string createRandomizer() {
-            Rcpp::Function sample = Rcpp::Environment::base_env()["sample"];
+        std::string uniqueToken() {
             std::ostringstream ostr;
-            ostr << Rcpp::as<int>(sample(100000, 1));
+            ostr << s_nextUniqueToken++;
             return ostr.str();
         }
 
@@ -3060,7 +3089,11 @@ namespace {
         std::vector<std::string> plugins_;
         std::vector<std::string> embeddedR_;
         std::vector<FileInfo> sourceDependencies_;
+        static int s_nextUniqueToken;
     };
+
+    // initialize next unique token
+    int SourceCppDynlib::s_nextUniqueToken = 0;
 
     // Dynlib cache that allows lookup by either file path or code contents
     class SourceCppDynlibCache {

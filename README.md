@@ -63,4 +63,4 @@ Compilation on OS X is untested.
 
 ##Credit
 
-This package was originally branched from commit 4329fa51b4cb92387f79000e7005e6f4798caed6 of Rcpp, which is written by Dirk Eddelbuettel, Romain Francois, JJ Allaire, Kevin Ushey, Doug Bates, and John Chambers
+This package was originally branched from commit 73c59b7474e28560ea9f8028ad32b86b658f152d of Rcpp, which is written by Dirk Eddelbuettel, Romain Francois, JJ Allaire, Kevin Ushey, Doug Bates, and John Chambers

@@ -65,7 +65,7 @@ namespace internal{
 		VECTOR& parent ;
 		std::string name;
 		void set( CTYPE rhs ){
-			int index = 0 ;
+			R_xlen_t index = 0 ;
 			try{
 				index = parent.offset(name) ;
 				parent[ index ] = rhs ;
@@ -110,14 +110,14 @@ namespace internal{
 
 		inline iterator begin() { return get() ; }
 		inline iterator end(){ return begin() + size() ; }
-		inline reference operator[]( int i ){ return *( get() + i ) ; }
-		inline int size(){ return strlen( get() ) ; }
+		inline reference operator[]( R_xlen_t i ){ return *( get() + i ) ; }
+		inline R_xlen_t size(){ return strlen( get() ) ; }
 
 	private:
 		VECTOR& parent ;
 		std::string name;
 		void set( const std::string& rhs ){
-			int index = 0 ;
+			R_xlen_t index = 0 ;
 			try{
 				index = parent.offset(name) ;
 				parent[ index ] = rhs ;
@@ -176,7 +176,7 @@ namespace internal{
 		VECTOR& parent ;
 		std::string name;
 		void set( SEXP rhs ){
-			int index = 0 ;
+			R_xlen_t index = 0 ;
 			try{
 				index = parent.offset(name) ;
 				parent[ index ] = rhs ;
@@ -249,6 +249,13 @@ namespace traits {
 	template<> struct r_vector_iterator<VECSXP> : proxy_based_iterator<VECSXP>{} ;
 	template<> struct r_vector_iterator<EXPRSXP> : proxy_based_iterator<EXPRSXP>{} ;
 	template<> struct r_vector_iterator<STRSXP> : proxy_based_iterator<STRSXP>{} ;
+	
+	template <int RTYPE> struct proxy_based_const_iterator{
+		typedef ::Rcpp::internal::Proxy_Iterator< typename r_vector_const_proxy<RTYPE>::type > type ;
+	} ;
+	template<> struct r_vector_const_iterator<VECSXP> : proxy_based_const_iterator<VECSXP>{} ;
+	template<> struct r_vector_const_iterator<EXPRSXP> : proxy_based_const_iterator<EXPRSXP>{} ;
+	template<> struct r_vector_const_iterator<STRSXP> : proxy_based_const_iterator<STRSXP>{} ;
 
 }  // traits
 }

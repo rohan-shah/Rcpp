@@ -36,16 +36,16 @@ public:
 
     MatrixColumn( MATRIX& parent, int i ) :
         n(parent.nrow()),
-        start(parent.begin() + i * n ),
-        const_start(const_cast<const MATRIX&>(parent).begin() + i *n)
+        start(parent.begin() + static_cast<R_xlen_t>(i) * n ),
+        const_start(const_cast<const MATRIX&>(parent).begin() + static_cast<R_xlen_t>(i) * n)
     {
         if( i < 0 || i >= parent.ncol() ) throw index_out_of_bounds() ;
     }
 
     MatrixColumn( const MATRIX& parent, int i ) :
         n(parent.nrow()),
-        start( const_cast<MATRIX&>(parent).begin() + i * n ),
-        const_start(parent.begin() + i *n)
+        start( const_cast<MATRIX&>(parent).begin() + static_cast<R_xlen_t>(i) * n ),
+        const_start(parent.begin() + static_cast<R_xlen_t>(i) * n)
     {
         if( i < 0 || i >= parent.ncol() ) throw index_out_of_bounds() ;
     }
@@ -92,13 +92,54 @@ public:
         return const_start + n ;
     }
 
-    inline R_len_t size() const {
+    inline int size() const {
         return n ;
     }
 
 private:
-    const R_len_t n ;
+    const int n ;
     iterator start ;
+    const_iterator const_start ;
+
+} ;
+
+template <int RTYPE>
+class ConstMatrixColumn : public VectorBase<RTYPE,true,ConstMatrixColumn<RTYPE> > {
+public:
+    typedef Matrix<RTYPE> MATRIX ;
+    typedef typename MATRIX::const_Proxy const_Proxy ;
+    typedef typename MATRIX::value_type value_type ;
+    typedef typename MATRIX::const_iterator const_iterator ;
+
+    ConstMatrixColumn( const MATRIX& parent, int i ) :
+        n(parent.nrow()),
+        const_start(parent.begin() + i *n)
+    {
+        if( i < 0 || i >= parent.ncol() ) throw index_out_of_bounds() ;
+    }
+
+    ConstMatrixColumn( const ConstMatrixColumn& other ) :
+        n(other.n),
+        const_start(other.const_start) {}
+        
+    inline const_Proxy operator[]( int i ) const {
+        return const_start[i] ;
+    }
+
+    inline const_iterator begin() const {
+        return const_start ;
+    }
+
+    inline const_iterator end() const {
+        return const_start + n ;
+    }
+
+    inline int size() const {
+        return n ;
+    }
+
+private:
+    const int n ;
     const_iterator const_start ;
 
 } ;
