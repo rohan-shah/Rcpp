@@ -56,7 +56,7 @@ inline bool Rcpp_IsNA__impl<true>(double x) {
         (void*) &x,
         (void*) &SmallNA,
         sizeof(double)
-    ) == 0 or memcmp(
+    ) == 0 || memcmp(
         (void*) &x,
         (void*) &LargeNA,
         sizeof(double)

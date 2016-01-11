@@ -36,6 +36,10 @@ __extension__ typedef unsigned long long int rcpp_ulong_long_type;
 #endif
 
 #endif
+#elif defined(_MSC_VER)
+typedef long long int rcpp_long_long_type;
+typedef unsigned long long int rcpp_ulong_long_type;
+#define RCPP_HAS_LONG_LONG_TYPES
 #endif
 
 #endif
