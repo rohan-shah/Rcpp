@@ -80,6 +80,69 @@ inline SEXP Rcpp_eval(SEXP expr, SEXP env) {
     return res;
 }
 
+inline SEXP Rcpp_topLevelExec(SEXP expr, SEXP env) {
+
+    // 'identity' function used to capture errors, interrupts
+    SEXP identity = Rf_findFun(
+        ::Rf_install("identity"),
+        R_BaseNamespace
+    );
+    
+    if (identity == R_UnboundValue) {
+        stop("Failed to find 'base::identity()'");
+    }
+
+    // define the evalq call -- the actual R evaluation we
+    // want to execute
+    Shield<SEXP> evalqCall(Rf_lang3(
+        ::Rf_install("evalq"),
+        expr,
+        env
+    ));
+    
+    // define the call -- enclose with `tryCatch` so we can record
+    // and later forward error messages
+    Shield<SEXP> call(Rf_lang4(
+        ::Rf_install("tryCatch"),
+        evalqCall,
+        identity,
+        identity
+    ));
+    SET_TAG(CDDR(call), ::Rf_install("error"));
+    SET_TAG(CDDR(CDR(call)), ::Rf_install("interrupt"));
+
+    // execute the call
+    int errorOccurred;
+    Shield<SEXP> res(::R_tryEval(call, R_GlobalEnv, &errorOccurred));
+
+    if(errorOccurred)
+    {
+	    throw internal::InterruptedException();
+    }
+    // check for condition results (errors, interrupts)
+    if (Rf_inherits(res, "condition")) {
+        
+        if (Rf_inherits(res, "error")) {
+            
+            Shield<SEXP> conditionMessageCall(::Rf_lang2(
+                    ::Rf_install("conditionMessage"),
+                    res
+            ));
+            
+            Shield<SEXP> conditionMessage(::Rf_eval(conditionMessageCall, R_GlobalEnv));
+            throw eval_error(CHAR(STRING_ELT(conditionMessage, 0)));
+        }
+        
+        // check for interrupt
+        if (Rf_inherits(res, "interrupt")) {
+            throw internal::InterruptedException();
+        }
+        
+    }
+    
+    return res;
+}
+
 } // namespace Rcpp
 
 #endif

@@ -75,6 +75,7 @@ namespace Rcpp {
 namespace Rcpp {
 
     SEXP Rcpp_eval(SEXP expr_, SEXP env = R_GlobalEnv);
+    SEXP Rcpp_topLevelExec(SEXP expr_, SEXP env = R_GlobalEnv);
     class Module;
 
     namespace traits {
