@@ -16,8 +16,10 @@ find_package(R REQUIRED)
 set(RCPP_LIB_FILE $<TARGET_FILE:Rcpp>)
 configure_file(${PROJECT_SOURCE_DIR}/RcppConfig.cmake.in ${PROJECT_BINARY_DIR}/RcppConfig.cmake @ONLY)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-	#Add a define to account for different name of certain function
-	add_definitions(-Dsnprintf=_snprintf)
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0")
+		#Add a define to account for different name of certain function
+		add_definitions(-Dsnprintf=_snprintf)
+	endif()
 
 	target_compile_definitions(Rcpp PUBLIC _CRT_SECURE_NO_WARNINGS)
 else()
