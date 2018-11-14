@@ -1,132 +1,66 @@
-## Rcpp [![Build Status](https://travis-ci.org/RcppCore/Rcpp.svg)](https://travis-ci.org/RcppCore/Rcpp) [![License](https://eddelbuettel.github.io/badges/GPL2+.svg)](http://www.gnu.org/licenses/gpl-2.0.html) [![CRAN](http://www.r-pkg.org/badges/version/Rcpp)](https://cran.r-project.org/package=Rcpp) [![Dependencies](https://tinyverse.netlify.com/badge/Rcpp)](https://cran.r-project.org/package=Rcpp) [![Downloads](http://cranlogs.r-pkg.org/badges/Rcpp?color=brightgreen)](http://www.r-pkg.org/pkg/Rcpp) [![Coverage Status](https://codecov.io/gh/RcppCore/Rcpp/graph/badge.svg)](https://codecov.io/github/RcppCore/Rcpp?branch=master)
+## Cross-Platform Rcpp
 
-### Seamless R and C++ Integration
+This is a severely cut-down version of Rcpp, which excludes almost all the R code. The purpose of this is
 
-The [Rcpp package](https://cran.r-project.org/package=Rcpp) provides R
-functions and a (header-only for client packages) C++ library greatly
-facilitating the integration of R and C++.
+1. This version can be compiled as a static library.
+2. This version comes with cmake build files.
+3. This version compiles with Visual Studio on Windows. 
 
-All underlying R types and objects, _i.e._, everything a `SEXP` represents internally
-in R, are matched to corresponding C++ objects. This covers anything from vectors,
-matrices or lists to environments, functions and more. Each `SEXP` variant is
-automatically mapped to a dedicated C++ class. For example, numeric vectors are
-represented as instances of the `Rcpp::NumericVector` class, environments are
-represented as instances of `Rcpp::Environment`, functions are represented as
-`Rcpp::Function`, etc ...  The
-[Rcpp-introduction](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-introduction.pdf)
-vignette (now published as a
-[TAS paper](https://amstat.tandfonline.com/doi/abs/10.1080/00031305.2017.1375990); an
-[earlier introduction](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-jss-2011.pdf)
-was also published as a [JSS paper](http://www.jstatsoft.org/v40/i08/))
-provides a good entry point to Rcpp as do the [Rcpp
-website](http://www.rcpp.org), the [Rcpp
-page](http://dirk.eddelbuettel.com/code/rcpp.html) and the [Rcpp
-Gallery](http://gallery.rcpp.org). Full documentation is provided by the
-[Rcpp book](http://www.rcpp.org/book/).
+Although it was always possible to compile R extensions using Visual Studio, this was extremely unpleasant without access to Rcpp. And it is sometimes necessary to use Visual Studio on Windows because
 
-Other highlights:
+1. The default toolchain on Windows is *bad*. Espceially the debugger, which is unable to even give a stack trace in most cases.
+2. Some libraries (Qt, Intels MKL) only work with Visual Studio on Windows, or the work necessary to recompile them is huge. 
 
-- The conversion from C++ to R and back is driven by the templates `Rcpp::wrap`
-and `Rcpp::as` which are highly flexible and extensible, as documented
-in the [Rcpp-extending](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-extending.pdf) vignette.
+Example packages where it was necessary or desirable to use Visual Studio are mpMapInteractive (github) and residualConnectivity (github). 
+In the case of mpMapInteractive we use the Qt package, which is extremely complicated. It's hard to debug such a complicated package on Windows without access to a decent compiler / debugger.
+In the case of residualConnectivity, this is a Monte Carlo package and performance is important. It also incorporates multithreading andthe Qt library. 
 
-- Rcpp also provides Rcpp modules, a framework that allows exposing
-C++ functions and classes to the R level. The [Rcpp-modules](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-modules.pdf) vignette
-details the current set of features of Rcpp-modules.
+## General Use
 
-- Rcpp includes a concept called Rcpp sugar that brings many R functions
-into C++. Sugar takes advantage of lazy evaluation and expression templates
-to achieve great performance while exposing a syntax that is much nicer
-to use than the equivalent low-level loop code. The [Rcpp-sugar](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-sugar.pdf)
-gives an overview of the feature.
+Any R package compiled using this static library must
 
-- Rcpp attributes provide a high-level syntax for declaring C++
-functions as callable from R and automatically generating the code
-required to invoke them.  Attributes are intended to facilitate both
-interactive use of C++ within R sessions as well as to support R
-package development. Attributes are built on top of Rcpp modules and
-their implementation is based on previous work in the inline package.
-See the [Rcpp-atttributes](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-attributes.pdf) vignettes for more details.
+1. Define a variable 'extern "C" char* package_name'. 
+2. Include the R file Rcpp_exceptions.R
+3. Call R_init_Rcpp from the R_init_* function of your shared library. 
 
-### Documentation
+## Windows 
 
-The package ships with nine pdf vignettes, including a [recent introduction to
-Rcpp](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-introduction.pdf) now
-published as a [paper in
-TAS](https://amstat.tandfonline.com/doi/abs/10.1080/00031305.2017.1375990) (and as a
-[preprint in PeerJ](https://peerj.com/preprints/3188/)). Also available is an
-[earlier
-introduction](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-jss-2011.pdf)
-which was published as a [JSS paper](http://www.jstatsoft.org/v40/i08/))
+On windows the CMake build scripts are only designed to build a 64-bit version of this package. Supported outputs are Visual Studio solution files and NMake Makefiles. 
 
-Among the other vignettes are the [Rcpp
-FAQ](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-FAQ.pdf) and the
-introduction to [Rcpp
-Attributes](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-attributes.pdf).
-Additional documentation is available via the [Rcpp book](http://www.rcpp.org/book)
-by Eddelbuettel (2013, Springer); see 'citation("Rcpp")' for details.
+### Compiling this package on Windows using Visual Studio
 
-### Examples
+1. Choose a binary directory (E.g. <RcppRoot>/build).
+2. Run the cmake gui. 
+3. Enter source code directory "<RcppRoot>" and binaries directory (E.g.<RcppRoot>/build). 
+4. Set R_COMMAND to <R_HOME>/bin/x64/R.exe. Ensure that you choose the 64-bit version. 
+5. If the output is going to be NMake Makefiles, set CMAKE_BUILD_TYPE appropriately (E.g. as either Release or Debug)
+6. Hit Configure and when prompted choose a Visual Studio 64-bit output, or NMake Makefiles.
+7. When configuring succeeds, hit generate. 
 
-The [Rcpp Gallery](http://gallery.rcpp.org) showcases over one hundred fully
-documented and working examples. The
-[package RcppExamples](https://cran.r-project.org/package=RcppExamples) contains a few basic
-examples covering the core data types.
+The configuration scripts generate an import library for R.dll. This means that the scripts must be able to run cl.exe and lib.exe. If this step fails, check that cl.exe and lib.exe can run. If not, you may need to set up the correct environment for the compiler (by running a script such as vcvarsx86_amd64.bat) before running cmake.
 
-A number of examples are included as are 1437 unit tests in 622 unit
-test functions provide additional usage examples.
+### Linking against this package on Windows
 
-An earlier version of Rcpp, containing what we now call the 'classic Rcpp
-API' was written during 2005 and 2006 by Dominick Samperi.  This code has
-been factored out of Rcpp into the package RcppClassic, and it is still
-available for code relying on the older interface. New development should
-always use this Rcpp package instead.
+1. Run the cmake gui.
+2. Add variable Rcpp_DIR and enter the value for the Rcpp binary directory (E.g. <RcppRoot>/build)
+3. Hit Configure and choose a Visual Studio 64-bit output, or NMake Makefiles. 
 
-Other usage examples are provided by packages using Rcpp. As of November 2018,
-there are 1490 [CRAN](https://cran.r-project.org) packages using Rcpp, a further
-150 [BioConductor](http://www.bioconductor.org) packages in its current release
-as well as an unknown number of GitHub, Bitbucket, R-Forge, ... repositories
-using Rcpp.  All these packages provide usage examples for Rcpp.
+## Linux
 
-### Installation
+### Compiling this package on Linux
 
-Released and tested versions of Rcpp are available via the
-[CRAN](https://cran.r-project.org) network, and can be installed from within R via
+1. Choose a binary directory (E.g. <RcppRoot>/build).
+2. Change directory to the binary directory.
+3. Run cmake <RcppRoot>. The configure script will attempt to locate R by itself. If it cannot be found, specifying the variable R_COMMAND (the command that runs R) by adding -DR_COMMAND=<..> to the cmake command. 
 
-```R
-install.packages("Rcpp")
-```
+### Linking against this package on Linux
 
-To install from source, ensure you have a complete package development
-environment for R as discussed in the relevant documentation; also see
-questions 1.2 and 1.3 in the
-[Rcpp-FAQ](https://cran.r-project.org/package=Rcpp/vignettes/Rcpp-FAQ.pdf).
+Add -DRcpp_DIR=<...> followed by the binary directory to your call to cmake. 
 
-### Support
+## OS X
 
-The best place for questions is the
-[Rcpp-devel](http://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/rcpp-devel)
-mailing list hosted at R-forge.  Note that in order to keep spam down, you must
-be a subscriber in order to post.  One can also consult the list archives to see
-if your question has been asked before.
+Compilation on OS X is untested. 
 
-Another option is to use
-[StackOverflow and its 'rcpp' tag](http://stackoverflow.com/questions/tagged/rcpp).
-Search functionality (use `rcpp` in squared brackets as in
-[[rcpp] my question terms](https://stackoverflow.com/search?q=[rcpp]%20my%20question%20terms)
-to tag the query) is very valuable as many questions have indeed been asked, and
-answered, before.
+## Credit
 
-The [issue tickets at the GitHub repo](https://github.com/RcppCore/Rcpp/issues)
-are the primary bug reporting interface.  As with the other web resources,
-previous issues can be searched as well.
-
-
-### Authors
-
-Dirk Eddelbuettel, Romain Francois, JJ Allaire, Kevin Ushey, Qiang Kou,
-Nathan Russell, Doug Bates, and John Chambers
-
-### License
-
-GPL (>= 2)
+This package was originally branched from commit 73c59b7474e28560ea9f8028ad32b86b658f152d of Rcpp, which is written by Dirk Eddelbuettel, Romain Francois, JJ Allaire, Kevin Ushey, Doug Bates, and John Chambers
