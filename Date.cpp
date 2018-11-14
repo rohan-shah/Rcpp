@@ -133,8 +133,12 @@ namespace Rcpp {
 #include "fcntl.h"
 #include "float.h"	/* for FLT_MAX and DBL_MAX */
 
-#include <unistd.h>		// solaris needs this for read() and close()
-
+#ifdef _MSC_VER
+#include <stdint.h>
+#include <io.h>
+#else
+#include <unistd.h>	// solaris needs this for read() and close() 	#include <unistd.h>	// solaris needs this for read() and close()
+#endif
 
 /* merged from private.h */
 #define TYPE_BIT(type)	(sizeof (type) * CHAR_BIT)
@@ -1347,8 +1351,8 @@ struct tzhead {
             idays -= ip[tmp->tm_mon];
         tmp->tm_mday = (int) (idays + 1);
         tmp->tm_isdst = 0;
-#if ! (defined(__MINGW32__) || defined(__MINGW64__) || defined(__sun) || defined(sun) || defined(_AIX))
-//#ifdef HAVE_TM_GMTOFF
+//#if ! (defined(__MINGW32__) || defined(__MINGW64__) || defined(__sun) || defined(sun) || defined(_AIX))
+#ifdef HAVE_TM_GMTOFF
         tmp->tm_gmtoff = offset;
 #endif
         return tmp;

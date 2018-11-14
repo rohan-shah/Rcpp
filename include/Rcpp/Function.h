@@ -81,7 +81,10 @@ namespace Rcpp{
             Shield<SEXP> call(Rf_lang1(Storage::get__()));
             return Rcpp_fast_eval(call, R_GlobalEnv);
         }
-
+        SEXP topLevelExec() const {
+            Shield<SEXP> call(Rf_lang1(Storage::get__()));
+            return Rcpp_eval(call);
+        }
         #include <Rcpp/generated/Function__operator.h>
 
         /**
