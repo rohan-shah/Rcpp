@@ -138,3 +138,8 @@ extern "C" void R_init_Rcpp(DllInfo* dllinfo) {
 
     init_Rcpp_routines(dllinfo);		// init routines
 }
+
+R_CallMethodDef* Rcpp_get_call()
+{
+    return callEntries;
+}

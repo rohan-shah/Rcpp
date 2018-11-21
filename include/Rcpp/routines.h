@@ -21,7 +21,7 @@
 #ifndef RCPP_ROUTINE_H
 #define RCPP_ROUTINE_H
 
-#if defined(COMPILING_RCPP)
+//#if defined(COMPILING_RCPP)
 
 // the idea is that this file should be generated automatically by Rcpp::register
 
@@ -63,9 +63,9 @@ int           error_occured();
 SEXP          rcpp_get_current_error();
 // void          print(SEXP s);
 
-#else
+//#else
 
-namespace Rcpp {
+/*namespace Rcpp {
 
     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
 
@@ -257,7 +257,7 @@ inline attribute_hidden SEXP rcpp_get_current_error(){
     typedef SEXP (*Fun)(void);
     static Fun fun = GET_CALLABLE("rcpp_get_current_error");
     return fun();
-}
+}*/
 
 // inline attribute_hidden void print(SEXP s) {
 //     typedef void (*Fun)(SEXP);
@@ -265,7 +265,7 @@ inline attribute_hidden SEXP rcpp_get_current_error(){
 //     fun(s);
 // }
 
-#endif
+//#endif
 
 
 #endif

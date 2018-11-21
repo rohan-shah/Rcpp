@@ -86,7 +86,7 @@ namespace Rcpp{
             return Rcpp_eval(call);
         }
         #include <Rcpp/generated/Function__operator.h>
-
+        #include <Rcpp/generated/Function__topLevelExec.h>
         /**
          * Returns the environment of this function
          */
