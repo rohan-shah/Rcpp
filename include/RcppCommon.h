@@ -101,7 +101,7 @@ namespace Rcpp {
     }
 
     inline SEXP Rcpp_ReplaceObject(SEXP x, SEXP y) {
-        if (Rf_isNull(x)) {
+        if (Rf_isNull(x)!=0) {
             Rcpp_PreserveObject(y);
         } else if (Rf_isNull(y)) {
             Rcpp_ReleaseObject(x); 	// #nocov

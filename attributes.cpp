@@ -1550,7 +1550,7 @@ namespace attributes {
         // Look for the signature termination ({ or ; not inside quotes)
         // on this line and then subsequent lines if necessary
         std::string signature;
-        for (int i = lineNumber; i<lines_.size(); i++) {
+        for (std::size_t i = lineNumber; i<lines_.size(); i++) {
             std::string line;
             line = lines_[i];
             bool insideQuotes = false;
@@ -3519,7 +3519,7 @@ BEGIN_RCPP
                                                       packageName,
                                                       fileSep));
     }
-    catch(const Rcpp::file_exists& e) {}
+    catch(const Rcpp::file_exists&) {}
 
     // write begin
     generators.writeBegin();

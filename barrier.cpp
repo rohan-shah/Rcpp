@@ -88,12 +88,13 @@ static SEXP Rcpp_cache = R_NilValue;
 #define RCPP_HASH_CACHE_INITIAL_SIZE 1024
 #endif
 
+extern "C" const char* package_name;
 // only used for debugging
 SEXP get_rcpp_cache() {
     if (! Rcpp_cache_know) {
 
         SEXP getNamespaceSym = Rf_install("getNamespace"); // cannot be gc()'ed  once in symbol table
-        Rcpp::Shield<SEXP> RcppString(Rf_mkString("Rcpp"));
+        Rcpp::Shield<SEXP> RcppString(Rf_mkString(package_name));
         Rcpp::Shield<SEXP> call(Rf_lang2(getNamespaceSym, RcppString));
         Rcpp::Shield<SEXP> RCPP(Rf_eval(call, R_GlobalEnv));
 

@@ -40,7 +40,7 @@ namespace Rcpp{
         Formula_Impl(SEXP x){
             switch( TYPEOF( x ) ){
             case LANGSXP:
-                if( ::Rf_inherits( x, "formula") ){
+                if( ::Rf_inherits( x, "formula") !=0){
                     Storage::set__( x );
                 } else{
                     Storage::set__( internal::convert_using_rfunction( x, "as.formula") ) ;
@@ -51,7 +51,7 @@ namespace Rcpp{
                 /* lists or expression, try the first one */
                 if( ::Rf_length(x) > 0 ){
                     SEXP y = VECTOR_ELT( x, 0 ) ;
-                    if( ::Rf_inherits( y, "formula" ) ){
+                    if( ::Rf_inherits( y, "formula" ) !=0){
                         Storage::set__( y ) ;
                     } else{
                         SEXP z = internal::convert_using_rfunction( y, "as.formula") ;

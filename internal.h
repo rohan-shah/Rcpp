@@ -40,7 +40,7 @@
 SEXP __CARGS__[MAX_ARGS];                        \
 int nargs = 0;                                   \
 for (; nargs<MAX_ARGS; nargs++) {                \
-    if (Rf_isNull(__P__)) break;                 \
+    if (Rf_isNull(__P__)!=0) break;                 \
     __CARGS__[nargs] = CAR(__P__);               \
     __P__ = CDR(__P__);                          \
 }

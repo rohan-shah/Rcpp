@@ -22,7 +22,11 @@
 #ifndef RCPP__HASH__HASH_H
 #define RCPP__HASH__HASH_H
 
+#ifdef _MSC_VER
+#include "msc_inttypes.h"
+#else
 #include <inttypes.h>			// needed with g++-4.7 to declare intptr_t
+#endif
 
 #include <Rcpp/hash/IndexHash.h>
 #include <Rcpp/hash/SelfHash.h>

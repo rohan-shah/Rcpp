@@ -32,7 +32,6 @@ namespace internal{
         DimNameProxy(SEXP data, int dim): data_(data), dim_(dim) {}
         DimNameProxy(DimNameProxy const& other):
             data_(other.data_), dim_(other.dim_) {}
-            
         inline DimNameProxy& assign(SEXP other) {
             if (Rf_length(other) == 0)
             {
@@ -71,7 +70,7 @@ namespace internal{
         template <typename T>
         inline operator T() const {
             SEXP dimnames = Rf_getAttrib(data_, R_DimNamesSymbol);
-            if (Rf_isNull(dimnames)) {
+            if (Rf_isNull(dimnames)!=0) {
                 return T();
             } else {
                 return T(VECTOR_ELT(dimnames, dim_));

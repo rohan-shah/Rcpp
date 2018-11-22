@@ -37,7 +37,7 @@ namespace Rcpp{
 
         template <>
         inline bool is_finite<REALSXP>(double x) {
-            return R_finite(x);
+            return R_finite(x)!=0;
         }
 
         template <>

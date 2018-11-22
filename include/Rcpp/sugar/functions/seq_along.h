@@ -46,7 +46,7 @@ inline sugar::SeqLen seq_along( const Rcpp::VectorBase<RTYPE,NA,T>& t){
 }
 
 inline sugar::SeqLen seq_len( const size_t& n){
-	return sugar::SeqLen( n ) ;
+	return sugar::SeqLen((int) n ) ;
 }
 
 inline Range seq(R_xlen_t start, R_xlen_t end){

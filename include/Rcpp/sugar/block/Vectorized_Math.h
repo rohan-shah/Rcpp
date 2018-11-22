@@ -80,6 +80,21 @@ private:
 } // sugar
 } // Rcpp
 
+#ifdef _MSC_VER
+#define VECTORIZED_MATH_1(__NAME__,__SYMBOL__)                               \
+namespace Rcpp{                                                              \
+        template <bool NA, typename T>                                           \
+        inline sugar::Vectorized<__SYMBOL__,NA,T>                                \
+        __NAME__( const VectorBase<REALSXP,NA,T>& t ){                           \
+                return sugar::Vectorized<__SYMBOL__,NA,T>( t ) ;                     \
+        }                                                                        \
+        template <bool NA, typename T>                                           \
+        inline sugar::Vectorized_INTSXP<__SYMBOL__,NA,T>                         \
+        __NAME__( const VectorBase<INTSXP,NA,T>& t      ){                           \
+                return sugar::Vectorized_INTSXP<__SYMBOL__,NA,T>( t ) ;              \
+        }                                                                        \
+}
+#else
 #define VECTORIZED_MATH_1(__NAME__,__SYMBOL__)                               \
 namespace Rcpp{                                                              \
         template <bool NA, typename T>                                           \
@@ -95,6 +110,7 @@ namespace Rcpp{                                                              \
                 return sugar::Vectorized_INTSXP<__SYMBOL__,NA,T>( t ) ;              \
         }                                                                        \
 }
+#endif
 
 
 #endif
